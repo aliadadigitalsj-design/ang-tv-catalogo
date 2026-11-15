@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "france24-es",
+    "name": "France 24 Español",
+    "title": "France 24 Español",
+    "type": "live",
+    "category": "tv",
+    "url": "https://www.france24.com/es/en-vivo",
+    "description": "Señal en directo en el sitio oficial de France 24. Se abre desde la fuente oficial.",
+    "source": "https://www.france24.com/es/",
+    "playback": "official-site",
+    "enabled": true
+  }
+]
