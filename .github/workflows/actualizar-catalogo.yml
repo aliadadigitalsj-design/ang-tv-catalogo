@@ -1,11 +1,37 @@
-name: ANG.TV - Prueba de automatización
+name: ANG.TV - Validar y mantener catálogo
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "17 9 * * *"
+
+permissions:
+  contents: read
 
 jobs:
-  prueba:
+  validar:
     runs-on: ubuntu-latest
     steps:
-      - name: Comprobar funcionamiento
-        run: echo "ANG.TV está listo para automatizarse"
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Validar catálogo sin modificarlo
+        run: python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("catalog.json")
+          items = json.loads(p.read_text(encoding="utf-8"))
+          if not isinstance(items, list):
+              raise SystemExit("catalog.json debe ser una lista JSON")
+          seen = set()
+          for item in items:
+              if not isinstance(item, dict):
+                  raise SystemExit("Cada elemento debe ser un objeto")
+              key = item.get("id") or item.get("name") or item.get("title")
+              if not key or key in seen:
+                  raise SystemExit("Falta identificador o hay identificadores duplicados")
+              seen.add(key)
+              url = item.get("url", "")
+              if url and not url.startswith(("https://", "http://")):
+                  raise SystemExit(f"URL no válida: {key}")
+          print(f"Catálogo válido: {len(items)} elemento(s). No se cambió ningún dato.")
+          PY
