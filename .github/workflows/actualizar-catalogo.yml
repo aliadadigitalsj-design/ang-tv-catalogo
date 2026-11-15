@@ -1,0 +1,11 @@
+name: ANG.TV - Prueba de automatización
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comprobar funcionamiento
+        run: echo "ANG.TV está listo para automatizarse"
